@@ -1,0 +1,24 @@
+sudo: required
+
+services:
+    - docker
+
+before_install:
+    - docker build -t peterl732/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true USERNAME/react-test npm test
+
+after_success:
+    - docker build -t peterl732/mc-client ./client
+    - docker build -t peterl732/mc-nginx ./nginx
+    - docker build -t peterl732/mc-server ./server
+    - docker build -t peterl732/mc-worker ./worker
+
+    #Log in to docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+    - docker push peterl732/mc-client
+    - docker push peterl732/mc-nginx
+    - docker push peterl732/mc-server
+    - docker push peterl732/mc-worker
