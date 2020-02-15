@@ -22,3 +22,17 @@ after_success:
     - docker push peterl732/mc-nginx
     - docker push peterl732/mc-server
     - docker push peterl732/mc-worker
+
+deploy:
+    edge: true
+    provider: elasticbeanstalk
+    region: "us-east-1"
+    app: "docker-mcapp"
+    env: "DockerMcapp-env"
+    bucket_name: "elasticbeanstalk-us-east-1-426715826403"
+    bucket_path: "docker-mcapp"
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: 
+        secure: $AWS_SECRET_KEY
